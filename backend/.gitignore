@@ -1,0 +1,23 @@
+# --- Python / Django ---
+__pycache__/
+*.py[cod]
+*.log
+*.pot
+*.pyc
+*.pyo
+*.pyd
+db.sqlite3
+*.sqlite3
+media/
+staticfiles/
+
+# Django migrations
+*/migrations/__pycache__/
+*/migrations/*.py
+
+# --- Environment ---
+.env
+.env.local
+*.env
+
+settings_local.py

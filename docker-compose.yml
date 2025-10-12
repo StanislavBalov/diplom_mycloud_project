@@ -1,0 +1,36 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: mycloud
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - db_data:/var/lib/postgresql/data
+  backend:
+    build: ./backend
+    volumes:
+      - ./backend:/code
+      - media_data:/code/media
+    environment:
+      - POSTGRES_HOST=db
+      - POSTGRES_DB=mycloud
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - DEBUG=1
+      - MEDIA_ROOT=/code/media
+    ports:
+      - '8000:8000'
+    depends_on:
+      - db
+  frontend:
+    build: ./frontend
+    ports:
+      - '3000:3000'
+    environment:
+      - VITE_API_BASE=http://localhost:8000/api
+
+volumes:
+  db_data:
+  media_data:

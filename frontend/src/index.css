@@ -1,0 +1,51 @@
+@import "tailwindcss/preflight";
+@import "tailwindcss/theme";
+@import "tailwindcss/utilities";
+
+:root {
+  --bg-primary: 255, 255, 255;
+  --bg-secondary: 249, 250, 251;
+  --text-primary: 31, 41, 55;
+  --text-secondary: 107, 114, 128;
+  --border-color: 229, 231, 235;
+  --card-bg: 255, 255, 255;
+  --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+.dark {
+  --bg-primary: 17, 24, 39;
+  --bg-secondary: 31, 41, 55;
+  --text-primary: 243, 244, 246;
+  --text-secondary: 156, 163, 175;
+  --border-color: 55, 65, 81;
+  --card-bg: 31, 41, 55;
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+}
+
+body {
+  background-color: rgb(var(--bg-primary));
+  color: rgb(var(--text-primary));
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.card {
+  background-color: rgb(var(--card-bg));
+  box-shadow: var(--shadow);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.border-theme {
+  border-color: rgb(var(--border-color)) !important;
+}
+
+.text-theme-primary {
+  color: rgb(var(--text-primary)) !important;
+}
+
+.text-theme-secondary {
+  color: rgb(var(--text-secondary)) !important;
+}
+
+.bg-theme-secondary {
+  background-color: rgb(var(--bg-secondary)) !important;
+}
