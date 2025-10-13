@@ -237,8 +237,8 @@
       [Service]
       User=<имя пользователя>
       Group=www-data
-      WorkingDirectory=/home/<имя пользователя>/mycloud-diploma/backend
-      ExecStart=/home/<имя пользователя>/mycloud-diploma/backend/env/bin/gunicorn \
+      WorkingDirectory=/home/<имя пользователя>/diplom_mycloud_project/backend
+      ExecStart=/home/<имя пользователя>/diplom_mycloud_project/backend/env/bin/gunicorn \
                --access-logfile - \
                --workers=3 \
                --bind unix:/run/gunicorn.sock \
@@ -283,7 +283,7 @@
          }
 
          location /static/ {
-            root /home/<имя пользователя>/mycloud-diploma/backend;
+            root /home/<имя пользователя>/diplom_mycloud_project/backend;
          }
 
          location / {
@@ -335,7 +335,7 @@
    ```
 44. Переходим в папку проекта `frontend`:
    ```
-   cd /home/<имя пользователя>/mycloud-diploma/frontend
+   cd /home/<имя пользователя>/diplom_mycloud_project/frontend
    ```
 45. Создаём файл `.env`
    ```
@@ -363,7 +363,7 @@
       ```
 48. Делаем файл `start.sh` исполняемым:
    ```
-   chmod +x /home/<имя пользователя>/mycloud-diploma/frontend/start.sh
+   chmod +x /home/<имя пользователя>/diplom_mycloud_project/frontend/start.sh
    ```
 49. Создаём сервис `frontend.service`:
    ```
@@ -379,8 +379,8 @@
       [Service]
       User=<имя пользователя>
       Group=www-data
-      WorkingDirectory=/home/<имя пользователя>/mycloud-diploma/frontend
-      ExecStart=/home/<имя пользователя>/mycloud-diploma/frontend/start.sh
+      WorkingDirectory=/home/<имя пользователя>/diplom_mycloud_project/frontend
+      ExecStart=/home/<имя пользователя>/diplom_mycloud_project/frontend/start.sh
 
       [Install]
       WantedBy=multi-user.target
