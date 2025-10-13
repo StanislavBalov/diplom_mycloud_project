@@ -3,7 +3,7 @@ import axios from "axios";
 const API_BASE =
   import.meta.env.VITE_API_BASE ||
   process.env.REACT_APP_API_URL ||
-  "http://localhost:8000/api";
+  "http://127.0.0.1:8000/api";
 
 const api = axios.create({
   baseURL: API_BASE,
@@ -14,12 +14,18 @@ const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
-  const token = localStorage.getItem("authToken");
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+  const csrftoken = getCookie('csrftoken');
+  if (csrftoken) {
+    config.headers['X-CSRFToken'] = csrftoken;
   }
   return config;
 });
+
+function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(';').shift();
+}
 
 api.interceptors.response.use(
   (response) => response,

@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { postJson } from '../api';
 import { useNavigate } from 'react-router-dom';
-import { FaUser, FaLock, FaEnvelope, FaSignInAlt } from 'react-icons/fa';
+import { FaUser, FaLock, FaSignInAlt } from 'react-icons/fa';
 import { useTheme } from '../context/ThemeContext';
 import toast from 'react-hot-toast';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../store/authSlice';
 
 export default function Login() {
   const { darkMode } = useTheme();
@@ -13,8 +15,11 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const nav = useNavigate();
 
+const dispatch = useDispatch();
+
   async function submit(e) {
     e.preventDefault();
+
     if (!username.trim() || !password.trim()) {
       setErr('Введите логин и пароль');
       return;
@@ -25,17 +30,23 @@ export default function Login() {
 
     try {
       const { res, body } = await postJson('/auth/login/', { username, password });
-      if (res.ok) {
+
+      // ✅ axios возвращает status, а не ok
+      if (res.status >= 200 && res.status < 300) {
         toast.success('Вход выполнен успешно!');
+        // можно сохранить данные пользователя
+        localStorage.setItem('user', JSON.stringify(body));
+          dispatch(setUser(body));
+        // если Django использует session auth, cookies сохранятся автоматически (т.к. withCredentials=true)
         nav('/files');
       } else {
         setErr(body.detail || 'Неверный логин или пароль');
-        toast.error('Ошибка входа');
+        toast.error(body.detail || 'Ошибка входа');
       }
     } catch (error) {
+      console.error('Ошибка входа:', error);
       setErr('Ошибка подключения к серверу');
       toast.error('Сервер недоступен');
-      console.error(error);
     } finally {
       setIsLoading(false);
     }
@@ -65,7 +76,7 @@ export default function Login() {
             <div>
               <label htmlFor="username" className="block text-sm font-medium text-theme-primary mb-2">
                 <FaUser className="inline mr-2 text-gray-500 dark:text-gray-400" />
-                Логин или Email
+                Логин
               </label>
               <input
                 id="username"
@@ -73,10 +84,9 @@ export default function Login() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 className="w-full px-4 py-3 border border-theme rounded-lg bg-bg-primary text-theme-primary placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
-                placeholder="Введите ваш логин или email"
+                placeholder="Введите ваш логин"
                 required
                 autoComplete="username"
-                autoFocus
               />
             </div>
 
@@ -104,9 +114,18 @@ export default function Login() {
             >
               {isLoading ? (
                 <>
-                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  <svg
+                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    />
                   </svg>
                   Вход...
                 </>
@@ -122,7 +141,10 @@ export default function Login() {
           <div className="mt-6 text-center">
             <p className="text-theme-secondary text-sm">
               Нет аккаунта?{' '}
-              <a href="/register" className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium hover:underline">
+              <a
+                href="/register"
+                className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 font-medium hover:underline"
+              >
                 Зарегистрироваться
               </a>
             </p>

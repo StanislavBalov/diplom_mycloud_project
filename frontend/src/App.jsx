@@ -17,6 +17,7 @@ import { ThemeProvider } from './context/ThemeContext';
 
 const ProtectedRoute = ({ children }) => {
   const { user, status } = useSelector((state) => state.auth);
+  const dispatch = useDispatch(); 
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -27,7 +28,7 @@ const ProtectedRoute = ({ children }) => {
     if (status === 'failed' && !user) {
       navigate('/login', { state: { from: location } });
     }
-  }, [status, user, navigate, location]);
+  }, [status, user, navigate, location, dispatch]);
 
   if (status === 'loading') {
     return (
