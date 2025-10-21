@@ -20,6 +20,25 @@ const FileManager = () => {
   const files = useSelector((s) => s.files.list);
   const [uploadProgress, setUploadProgress] = useState({});
   const [currentPath, setCurrentPath] = useState("/");
+  const MAX_SIZE_MB = 50;
+  const ALLOWED_TYPES = ["image/jpeg","image/png","application/pdf","text/plain"];
+
+  function validateBeforeUpload(file) {
+  if (file.size > MAX_SIZE_MB * 1024 * 1024) {
+    toast.error(`Файл слишком большой (макс ${MAX_SIZE_MB} МБ)`);
+    return false;
+  }
+  if (!ALLOWED_TYPES.includes(file.type)) {
+    toast.error(`Неподдерживаемый тип файла: ${file.type}`);
+    return false;
+  }
+  return true;
+}
+
+function onFileSelected(e) {
+  const file = e.target.files[0];
+  if (!validateBeforeUpload(file)) return;
+}
 
   async function loadFiles() {
     try {

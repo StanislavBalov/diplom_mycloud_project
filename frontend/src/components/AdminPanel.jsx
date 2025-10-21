@@ -8,6 +8,8 @@ export default function AdminPanel() {
   const { darkMode } = useTheme();
   const [users, setUsers] = useState([]);
   const [err, setErr] = useState(null);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(true);
 
   async function loadUsers() {
@@ -33,7 +35,7 @@ export default function AdminPanel() {
   useEffect(() => {
     loadUsers();
   }, []);
-
+  
   async function removeUser(id, username) {
     if (!window.confirm(`Вы уверены, что хотите удалить пользователя "${username}"?`)) return;
 

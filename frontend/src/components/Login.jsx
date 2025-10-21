@@ -31,14 +31,12 @@ const dispatch = useDispatch();
     try {
       const { res, body } = await postJson('/auth/login/', { username, password });
 
-      // ✅ axios возвращает status, а не ok
       if (res.status >= 200 && res.status < 300) {
         toast.success('Вход выполнен успешно!');
-        // можно сохранить данные пользователя
-        localStorage.setItem('user', JSON.stringify(body));
+        localStorage.setItem('user', JSON.stringify(body.user));
           dispatch(setUser(body));
-        // если Django использует session auth, cookies сохранятся автоматически (т.к. withCredentials=true)
         nav('/files');
+
       } else {
         setErr(body.detail || 'Неверный логин или пароль');
         toast.error(body.detail || 'Ошибка входа');

@@ -1,8 +1,16 @@
 from rest_framework import serializers
-from .models import StoredFile
+from .models import StoredFile as File
 
-class StoredFileSerializer(serializers.ModelSerializer):
+class FileSerializer(serializers.ModelSerializer):
+    owner_username = serializers.CharField(source='owner.username', read_only=True)
+    size = serializers.SerializerMethodField()
+
     class Meta:
-        model = StoredFile
-        fields = '__all__'
-        read_only_fields = ('stored_name','uploaded_at','owner','public_link','path','size')
+        model = File
+        fields = ('id', 'name', 'file', 'owner', 'owner_username', 'size', 'created_at')
+
+    def get_size(self, obj):
+        try:
+            return obj.file.size
+        except:
+            return None

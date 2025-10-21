@@ -1,13 +1,8 @@
 from django.urls import path
-from . import views
+from .views import FileUploadView, UserFilesView, AdminUserFilesView
 
 urlpatterns = [
-    path('files/', views.FilesListView.as_view()),
-    path('files/upload/', views.UploadFileView.as_view()),
-    path('files/<int:file_id>/download/', views.DownloadFileView.as_view()),
-    path('files/<int:file_id>/delete/', views.DeleteFileView.as_view()),
-    path('files/<int:file_id>/rename/', views.RenameFileView.as_view()),
-    path('files/<int:file_id>/comment/', views.ChangeCommentView.as_view()),
-    path('files/<int:file_id>/public/', views.PublicLinkView.as_view()),
-    path('public/<uuid:link_uuid>/', views.DownloadPublicView.as_view()),
+    path('upload/', FileUploadView.as_view(), name='file_upload'),
+    path('files/', UserFilesView.as_view(), name='user_files'),
+    path('admin/user/<int:user_id>/files/', AdminUserFilesView.as_view(), name='admin_user_files'),
 ]
